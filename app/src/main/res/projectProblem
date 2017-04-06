@@ -1,0 +1,5 @@
+RegisterActivity:
+ 扫了用户名和密码的存储
+ 用户名： phoneNumber
+ 密码：  password
+MainActivity: 少了用户名和密码的验证，跳转到首页
