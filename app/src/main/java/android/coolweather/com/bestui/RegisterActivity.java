@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
@@ -38,23 +39,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private Button registerButton;
     private Drawable errorDrawable;
     private Button verifyButton;
+    private ImageButton backButton;
 
     private final int GET_MSG = 5555;
     private final int VER_MSG = 6666;
     private final int GET_ERROR = 7777;
     private final int VER_ERROR = 8888;
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
-            case android.R.id.home:
-                backLoginActivity();
-                break;
-            default:
-                break;
-        }
-        return true;
-    }
 
     private Handler handle = new Handler() {
         @Override
@@ -95,18 +86,15 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         acquireMsgButton = (Button) findViewById(R.id.acquire_msg_button);
         registerButton = (Button) findViewById(R.id.register_button);
         toolBar = (Toolbar) findViewById(R.id.toolbar);
+        backButton = (ImageButton) findViewById(R.id.back_button);
         errorDrawable = (Drawable) getResources().getDrawable(R.drawable.error);
         errorDrawable.setBounds(0, 0, 50, 50);
 
         registerButton.setOnClickListener(this);
         acquireMsgButton.setOnClickListener(this);
         verifyButton.setOnClickListener(this);
+        backButton.setOnClickListener(this);
         //初始化SMSS接口
-
-        setSupportActionBar(toolBar);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeAsUpIndicator(R.drawable.back_dark);
         initSMSSDK();
     }
 
@@ -254,11 +242,14 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                         passwordConfirmText.setError("两次密码输入不同",errorDrawable);
                         break;
                     case 5:
-                        msgVerifyNumText.setError("验证码输入有误", errorDrawable);
+                        msgVerifyNumText.setError("验证码未验证或者有误", errorDrawable);
                         break;
                     default:
                         break;
                 }
+                break;
+            case R.id.back_button:
+                backLoginActivity();
                 break;
             default:
                 break;

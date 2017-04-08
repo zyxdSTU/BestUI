@@ -6,6 +6,11 @@
         <item name="colorPrimary">#4CAF50</item>
         <item name="colorPrimaryDark">#66BB6A</item>
         <item name="colorAccent">#43A047</item>
+        <item name="toolbarStyle">@style/NLToolbar</item>
+    </style>
+
+    <style name="NLToolbar" parent="Widget.AppCompat.Toolbar">
+        <item name="contentInsetStart">0dp</item>
     </style>
 
 </resources>

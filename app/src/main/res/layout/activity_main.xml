@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -20,36 +21,34 @@
     </android.support.v7.widget.Toolbar>
 
     <LinearLayout
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="100dp"
-        android:layout_marginBottom="30dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <ImageView
-            android:background="@drawable/rect"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:layout_width="40dp"
+            android:layout_height="30dp"
             android:src="@drawable/phone"/>
         <com.rengwuxian.materialedittext.MaterialEditText
             android:paddingLeft="30dp"
             android:inputType="phone"
             android:id="@+id/phone_text"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:hint="手机号码"/>
 
     </LinearLayout>
 
     <LinearLayout
-        android:layout_marginLeft="30dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <ImageView
-            android:background="@drawable/rect"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:layout_width="40dp"
+            android:layout_height="30dp"
             android:src="@drawable/lock"/>
 
         <com.rengwuxian.materialedittext.MaterialEditText
@@ -59,35 +58,35 @@
             android:paddingLeft="30dp"
             android:inputType="textPassword"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:hint="6-12位字母数字组合密码"
             />
     </LinearLayout>
 
 
     <LinearLayout
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <Button
             android:id="@+id/login_button"
-            android:layout_marginLeft="70dp"
+            android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             android:background="@drawable/rect"
-            android:layout_width="80dp"
-            android:layout_height="50dp"
+            android:layout_width="120dp"
+            android:layout_height="40dp"
             android:text="登录"/>
 
         <Button
             android:id="@+id/register_button"
             android:layout_marginLeft="30dp"
-            android:layout_marginRight="70dp"
+            android:layout_marginRight="50dp"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             android:background="@drawable/rect"
-            android:layout_width="80dp"
-            android:layout_height="50dp"
+            android:layout_width="120dp"
+            android:layout_height="40dp"
             android:text="注册"/>
     </LinearLayout>
 </LinearLayout>
