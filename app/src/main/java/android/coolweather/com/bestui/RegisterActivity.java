@@ -39,6 +39,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private Drawable errorDrawable;
     private Button verifyButton;
 
+    private final int GET_MSG = 5555;
+    private final int VER_MSG = 6666;
+    private final int GET_ERROR = 7777;
+    private final int VER_ERROR = 8888;
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
@@ -54,35 +59,30 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private Handler handle = new Handler() {
         @Override
         public void handleMessage(Message message) {
-            int event = message.arg1;
-            int result = message.arg2;
-            Object data = message.obj;
+            int status = message.arg1;
+            int num = message.arg2;
 
-            if(result == SMSSDK.RESULT_COMPLETE) {
-                if(event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
-                    if(result == SMSSDK.RESULT_COMPLETE) {
-                        Toast.makeText(RegisterActivity.this, "验证成功", Toast.LENGTH_SHORT).show();
-                        verifyStatus = true;
-                        verifyButton.setEnabled(true);
-                    } else {
-                        Toast.makeText(RegisterActivity.this, "验证失败", Toast.LENGTH_SHORT).show();
-                        verifyButton.setEnabled(true);
-                    }
-                }else if(event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
-                    if(result == SMSSDK.RESULT_COMPLETE) {
-                        Toast.makeText(RegisterActivity.this, "获取验证码成功", Toast.LENGTH_SHORT).show();
-                        acquireStatus = true;
-                        acquireMsgButton.setEnabled(true);
-                    } else {
-                        Toast.makeText(RegisterActivity.this, "获取验证码成功", Toast.LENGTH_SHORT).show();
-                        acquireMsgButton.setEnabled(true);
-                    }
-                }else if(event == SMSSDK.EVENT_GET_SUPPORTED_COUNTRIES) {
-                    //返回支持发送验证码的国家列表
-                }
+            if(status == GET_MSG && !acquireStatus) {
+                acquireMsgButton.setText("等待" + (59 - num) + "秒获取");
+            }
+
+            if(status == VER_MSG && !verifyStatus) {
+               verifyButton.setText((59 - num) + "秒后验证");
+            }
+
+            if(status == GET_ERROR && !acquireStatus) {
+                acquireMsgButton.setEnabled(true);
+                acquireMsgButton.setText("获取验证码");
+            }
+
+            if(status == VER_ERROR && !verifyStatus) {
+                verifyButton.setEnabled(true);
+                verifyButton.setText("验证");
             }
         }
     };
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,11 +116,33 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             @Override
             //消息回调接口
             public void afterEvent(int event, int result, Object data) {
-                Message msg = new Message();
-                msg.arg1 = event;
-                msg.arg2 = result;
-                msg.obj = data;
-                handle.sendMessage(msg);
+                if(result == SMSSDK.RESULT_COMPLETE) {
+                    if(event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(RegisterActivity.this, "验证成功", Toast.LENGTH_SHORT).show();
+                                verifyStatus = true;
+                                verifyButton.setEnabled(true);
+                                verifyButton.setText("验证");
+                            }
+                        });
+                    }
+                    else if(event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(RegisterActivity.this, "获取验证码成功", Toast.LENGTH_SHORT).show();
+                                acquireStatus = true;
+                                acquireMsgButton.setEnabled(true);
+                                acquireMsgButton.setText("获取验证码");
+                            }
+                        });
+                    }
+                    else if(event == SMSSDK.EVENT_GET_SUPPORTED_COUNTRIES) {
+                        //返回支持发送验证码的国家列表
+                    }
+                }
             }
         };
         SMSSDK.registerEventHandler(eventHandler);
@@ -143,29 +165,30 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     verifyStatus = false;
                     acquireStatus = false;
                     acquireMsgButton.setEnabled(false);
-                    acquireMsgButton.setText("60秒后获取");
+                    acquireMsgButton.setText("等待60秒获取");
                     /**
-                         * 开一个新的线程
-                         */
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
+                     * 开一个新的线程
+                     */
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            for(int i = 0; i < 60; i++) {
                                 try {
-                                    Thread.sleep(60000);
-                                }catch(Exception e) {
+                                    Message msg = new Message();
+                                    Thread.sleep(1000);
+                                    if(!acquireStatus) {
+                                        msg.arg1 = GET_MSG;
+                                        msg.arg2 = i;
+                                        handle.sendMessage(msg);
+                                    } else break;
+                                } catch (Exception e) {
                                     e.printStackTrace();
                                 }
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if(!acquireStatus) {
-                                            Toast.makeText(RegisterActivity.this, "获取失败", Toast.LENGTH_SHORT);
-                                            acquireMsgButton.setText("获取验证码");
-                                            acquireMsgButton.setEnabled(true);
-                                        }
-                                    }
-                                });
                             }
+                            Message msg = new Message();
+                            msg.arg1 = GET_ERROR;
+                            handle.sendMessage(msg);
+                        }
                     }).start();
 
                 }else {
@@ -185,21 +208,22 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            try {
-                                Thread.sleep(60000);
-                            }catch(Exception e) {
-                                e.printStackTrace();
-                            }
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
+                            for(int i = 0; i < 60; i++) {
+                                try {
+                                    Message msg = new Message();
+                                    Thread.sleep(1000);
                                     if(!verifyStatus) {
-                                        Toast.makeText(RegisterActivity.this, "验证失败", Toast.LENGTH_SHORT);
-                                        verifyButton.setEnabled(true);
-                                        verifyButton.setText("验证");
-                                    }
+                                        msg.arg1 = VER_MSG;
+                                        msg.arg2 = i;
+                                        handle.sendMessage(msg);
+                                    } else break;
+                                } catch (Exception e) {
+                                    e.printStackTrace();
                                 }
-                            });
+                            }
+                            Message msg = new Message();
+                            msg.arg1 = VER_ERROR;
+                            handle.sendMessage(msg);
                         }
                     }).start();
 
