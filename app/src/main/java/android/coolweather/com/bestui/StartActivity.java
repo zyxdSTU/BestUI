@@ -22,7 +22,7 @@ public class StartActivity extends AppCompatActivity {
     }
 
     public void toLoginActivity() {
-        Intent intent = new Intent(StartActivity.this, MainActivity.class);
+        Intent intent = new Intent(StartActivity.this, LoginActivity.class);
         startActivity(intent);
     }
 }

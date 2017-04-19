@@ -278,7 +278,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void backLoginActivity() {
-        Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+        Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
         startActivity(intent);
     }
 }

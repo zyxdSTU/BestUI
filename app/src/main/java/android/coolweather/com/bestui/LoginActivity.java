@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class MainActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     private EditText phoneNumText;
     private EditText passwordText;
@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
 
         phoneNumText = (EditText) findViewById(R.id.phone_text);
         passwordText = (EditText) findViewById(R.id.password_text);
@@ -32,7 +32,8 @@ public class MainActivity extends AppCompatActivity {
              * 跳转到首页
              */
             public void onClick(View view) {
-
+                finish();
+                startActivity(new Intent(LoginActivity.this, HomeActivity.class));
             }
         });
 
@@ -42,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
              * 跳转到注册页面
              */
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(intent);
             }
         });

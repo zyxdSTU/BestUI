@@ -93,6 +93,8 @@
             android:src="@drawable/edit"/>
 
         <TextView
+            android:id="@+id/edit_text"
+            android:clickable="true"
             android:layout_marginRight="5dp"
             android:textSize="18sp"
             android:layout_gravity="center_vertical"
@@ -110,6 +112,8 @@
             android:src="@drawable/delete"/>
 
         <TextView
+            android:id="@+id/delete_text"
+            android:clickable="true"
             android:textSize="18sp"
             android:layout_gravity="center_vertical"
             android:layout_width="wrap_content"

@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:background="#FAFAFA"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -21,37 +22,42 @@
     </android.support.v7.widget.Toolbar>
 
     <LinearLayout
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
+        android:gravity="center_vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="50dp">
 
         <ImageView
-            android:layout_marginTop="10dp"
             android:layout_width="40dp"
-            android:layout_height="30dp"
+            android:layout_height="35dp"
             android:src="@drawable/phone"/>
-        <com.rengwuxian.materialedittext.MaterialEditText
+        <EditText
+            android:gravity="center_vertical"
+            android:background="@null"
             android:paddingLeft="30dp"
             android:inputType="phone"
             android:id="@+id/phone_text"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:hint="手机号码"/>
-
     </LinearLayout>
 
-    <LinearLayout
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="1dp"
+        android:background="#EEEEEE"/>
+
+    <LinearLayout
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
 
         <ImageView
-            android:layout_marginTop="10dp"
             android:layout_width="40dp"
-            android:layout_height="30dp"
+            android:layout_height="35dp"
             android:src="@drawable/lock"/>
 
-        <com.rengwuxian.materialedittext.MaterialEditText
+        <EditText
+            android:background="@null"
             android:id="@+id/password_text"
             android:maxLength="12"
             android:digits="0123456789qwertyuioplkjhgfdsazxcvbnm"
@@ -63,30 +69,34 @@
             />
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#EEEEEE"/>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_marginTop="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <Button
+            android:layout_alignParentLeft="true"
             android:id="@+id/login_button"
             android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            android:textColor="#FFFFFF"
             android:background="@drawable/rect"
             android:layout_width="120dp"
             android:layout_height="40dp"
             android:text="登录"/>
 
         <Button
+            android:layout_alignParentRight="true"
             android:id="@+id/register_button"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="50dp"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            android:layout_marginRight="30dp"
+            android:textColor="#FFFFFF"
             android:background="@drawable/rect"
             android:layout_width="120dp"
             android:layout_height="40dp"
             android:text="注册"/>
-    </LinearLayout>
+    </RelativeLayout>
 </LinearLayout>

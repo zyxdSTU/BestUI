@@ -1,10 +1,12 @@
 package android.coolweather.com.bestui.JavaBean;
 
+import org.litepal.crud.DataSupport;
+
 /**
  * Created by Administrator on 2017/4/18.
  */
 
-public class Address {
+public class Address extends DataSupport{
     private String name;
     private String phoneNum;
     private String address;

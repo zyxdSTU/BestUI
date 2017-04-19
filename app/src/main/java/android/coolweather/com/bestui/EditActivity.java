@@ -50,6 +50,9 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         switch(id) {
             case R.id.save_button:
                 gotoAddressActivity();
+                break;
+            default:
+                break;
         }
     }
 
@@ -60,9 +63,9 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         String addressText = addressEditText.getText().toString().trim();
         Address address = new Address(name, phoneNum, addressText, defaultCheckBox.isChecked());
 
-        if(name == null)  { nameEditText.setError("收货人不能为空"); return;}
-        if(phoneNum == null) { phoneNumEditText.setError("电话号码不能为空"); return; }
-        if(address == null) { addressEditText.setError("地址不能为空"); return; }
+        if(name.equals(""))  { nameEditText.setError("收货人不能为空"); return;}
+        if(phoneNum.equals("")) { phoneNumEditText.setError("电话号码不能为空"); return; }
+        if(address.equals("")) { addressEditText.setError("地址不能为空"); return; }
 
         intent.putExtra("edit_address", new Gson().toJson(address));
         intent.putExtra("position", position);
