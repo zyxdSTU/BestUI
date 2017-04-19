@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:background="#4CAF50"
+        android:layout_height="?attr/actionBarSize">
+
+        <TextView
+            android:text="用户"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:textColor="#FFFFFF"/>
+
+    </android.support.v7.widget.Toolbar>
+
+    <TextView
+        android:id="@+id/info_text"
+        android:paddingLeft="15dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="center_vertical"
+        android:clickable="true"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="#FAFAFA"
+        android:text="我的信息"/>
+
+    <TextView
+        android:id="@+id/order_text"
+        android:paddingLeft="15dp"
+        android:gravity="center_vertical"
+        android:clickable="true"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="#FAFAFA"
+        android:text="我的订单"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#EEEEEE"/>
+
+    <TextView
+        android:id="@+id/collect_text"
+        android:paddingLeft="15dp"
+        android:gravity="center_vertical"
+        android:clickable="true"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="#FAFAFA"
+        android:text="我的收藏"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#EEEEEE"/>
+
+    <TextView
+        android:id="@+id/address_text"
+        android:paddingLeft="15dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="center_vertical"
+        android:clickable="true"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="#FAFAFA"
+        android:text="地址管理"/>
+
+    <TextView
+        android:id="@+id/system_text"
+        android:paddingLeft="15dp"
+        android:gravity="center_vertical"
+        android:clickable="true"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="#FAFAFA"
+        android:text="关于系统"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#EEEEEE"/>
+
+    <TextView
+        android:id="@+id/help_text"
+        android:paddingLeft="15dp"
+        android:gravity="center_vertical"
+        android:clickable="true"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_marginBottom="95dp"
+        android:background="#FAFAFA"
+        android:text="使用帮助"/>
+
+    <Button
+        android:id="@+id/exit_button"
+        android:textColor="#FFFFFF"
+        android:text="退出登录"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#4CAF50"/>
+</LinearLayout>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="#FAFAFA"
+    android:orientation="horizontal"
+    android:layout_margin="0.5dp"
+    android:layout_width="match_parent"
+    android:layout_height="90dp">
+
+    <CheckBox
+        android:id="@+id/check_box"
+        android:button="@drawable/checkbox"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="7dp"/>
+
+    <ImageView
+        android:id="@+id/produce_image"
+        android:src="@drawable/apple"
+        android:scaleType="fitXY"
+        android:layout_gravity="center"
+        android:adjustViewBounds="true"
+        android:layout_width="100dp"
+        android:layout_height="70dp" />
+
+    <LinearLayout
+        android:layout_marginTop="8dp"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+        <TextView
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="2dp"
+            android:id="@+id/produce_name"
+            android:text="苹果"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:textColor="#66BB6A"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="2"/>
+
+        <TextView
+            android:layout_marginBottom="2dp"
+            android:layout_marginLeft="10dp"
+            android:gravity="center"
+            android:id="@+id/produce_price"
+            android:textColor="#EF5350"
+            android:text="¥44.32"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:textSize="18sp"/>
+    </LinearLayout>
+</LinearLayout>
