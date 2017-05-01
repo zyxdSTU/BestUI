@@ -12,7 +12,6 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
             <ImageView
-                android:src="@drawable/apple"
                 android:scaleType="fitXY"
                 android:adjustViewBounds="true"
                 android:id="@+id/produce_image"

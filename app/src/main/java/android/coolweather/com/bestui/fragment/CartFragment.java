@@ -1,29 +1,40 @@
 package android.coolweather.com.bestui.fragment;
 
+import android.content.Intent;
 import android.coolweather.com.bestui.JavaBean.Produce;
+import android.coolweather.com.bestui.JavaBean.ProduceCart;
+import android.coolweather.com.bestui.JavaBean.SerializableMap;
+import android.coolweather.com.bestui.OrderActivity;
 import android.coolweather.com.bestui.R;
 import android.coolweather.com.bestui.adapter.ProduceCartAdapter;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.TextView;
-
+import android.support.v4.app.Fragment;
+import android.widget.Toast;
+import org.litepal.crud.DataSupport;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
  * Created by Administrator on 2017/4/9.
  */
 
-public class CartFragment extends BaseFragment implements View.OnClickListener{
-    private ArrayList<Produce> produceList = new ArrayList<Produce>();
+public class CartFragment extends Fragment implements View.OnClickListener{
+    private ArrayList<ProduceCart> produceCartList = new ArrayList<ProduceCart>();
     private ProduceCartAdapter adapter;
     private RecyclerView recyclerView;
     private ImageButton trashButton;
@@ -37,10 +48,10 @@ public class CartFragment extends BaseFragment implements View.OnClickListener{
     final int UPDATE_TEXT = 1;
 
     @Override
-    public View initView() {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         initList();
-        View view =  View.inflate(mContext, R.layout.layout_cart, null);
-
+        View view = inflater.inflate(R.layout.layout_cart, container, false);
         /**
          * 消息事件
          */
@@ -65,7 +76,8 @@ public class CartFragment extends BaseFragment implements View.OnClickListener{
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new ProduceCartAdapter(produceList, handler);
+        adapter = new ProduceCartAdapter(produceCartList, handler);
+
         recyclerView.setAdapter(adapter);
 
         trashButton.setOnClickListener(this);
@@ -86,20 +98,12 @@ public class CartFragment extends BaseFragment implements View.OnClickListener{
         return view;
     }
 
-    @Override
-    public View initData() {
-        return null;
-    }
-
     /**
-     * 临时的函数
+     * 填充list
      */
     public void initList() {
-        for(int i = 0; i < 10; i++) {
-            produceList.add(new Produce(R.drawable.apple, "苹果", 22, "十分新鲜"));
-            produceList.add(new Produce(R.drawable.pear, "梨", 33, "很不错"));
-            produceList.add(new Produce(R.drawable.grape, "葡萄", 22, "很美味"));
-        }
+        produceCartList.clear();
+        produceCartList.addAll(DataSupport.findAll(ProduceCart.class));
     }
 
     @Override
@@ -118,45 +122,65 @@ public class CartFragment extends BaseFragment implements View.OnClickListener{
     }
 
     /**
-     * 删除收藏
+     * 删除
      */
     public void deleteItem() {
-        ArrayList<Produce> tempProduceList = new ArrayList<>();
-        for(int i = 0; i < produceList.size(); i++) {
+        ArrayList<ProduceCart> tempProduceList = new ArrayList<>();
+        for(int i = 0; i < produceCartList.size(); i++) {
             if(!adapter.checkList.contains(new Integer(i))) {
-                tempProduceList.add(produceList.get(i));
+                tempProduceList.add(produceCartList.get(i));
             }
         }
-        produceList.clear();
-        produceList.addAll(tempProduceList);
+
+        /**更新数据库**/
+        DataSupport.deleteAll(ProduceCart.class);
+        for(ProduceCart produceCart : tempProduceList) {
+            new ProduceCart(produceCart).save();
+        }
+
+        produceCartList.clear();
+        produceCartList.addAll(tempProduceList);
+
+        /**维护checkMap,buyMap**/
+        changeMap();
+        checkBox.setChecked(false);
         adapter.checkList.clear();
         adapter.notifyDataSetChanged();
+        sendMessage();
     }
 
     /**
      * 总钱数
      */
     public void calculate() {
+        Intent intent = new Intent(getActivity(), OrderActivity.class);
 
+        /**传递map**/
+        Bundle bundle = new Bundle();
+        SerializableMap serializableMap = new SerializableMap();
+        serializableMap.setMap(adapter.buyMap);
+        bundle.putSerializable("buyMapF", serializableMap);
+        intent.putExtras(bundle);
+        intent.putExtra("totalMoney",totalText.getText().toString());
+        startActivity(intent);
     }
 
     /**
      * 全选
      */
     public void selectedAll() {
-        for(int i = 0; i < produceList.size(); i++) {
+        for(int i = 0; i < produceCartList.size(); i++) {
             if(!adapter.checkList.contains(new Integer(i)))
             adapter.checkList.add(new Integer(i));
         }
         adapter.notifyDataSetChanged();
 
         /**
-         * 发送消息
+         * 发送消息,更新buyMap
          */
+        adapter.buyMap.clear();
         adapter.buyMap.putAll(adapter.checkMap);
-        Message msg = new Message();
-        msg.what = UPDATE_TEXT;
-        handler.sendMessage(msg);
+        sendMessage();
     }
 
     /**
@@ -165,14 +189,11 @@ public class CartFragment extends BaseFragment implements View.OnClickListener{
     public void selectedNo() {
         adapter.checkList.clear();
         adapter.notifyDataSetChanged();
-
         /**
          * 发送消息
          */
         adapter.buyMap.clear();
-        Message msg = new Message();
-        msg.what = UPDATE_TEXT;
-        handler.sendMessage(msg);
+        sendMessage();
     }
 
     /**
@@ -184,11 +205,43 @@ public class CartFragment extends BaseFragment implements View.OnClickListener{
 
         while (iterator.hasNext()) {
             Map.Entry entry = (Map.Entry) iterator.next();
-            Produce key = (Produce) entry.getKey();
+            ProduceCart key = (ProduceCart) entry.getKey();
             Double value = (Double) entry.getValue();
             total += value * key.getPrice();
         }
+        totalText.setText("¥" + String.valueOf(total));
+        calculateButton.setText("去结算 (" + adapter.buyMap.size()+")");
+    }
 
-        totalText.setText(String.valueOf(total));
+
+    public void changeMap() {
+            /**从checkMap中删除元素**/
+            for(ProduceCart produceCart : adapter.buyMap.keySet()) {
+                adapter.checkMap.remove(produceCart);
+            }
+            adapter.buyMap.clear();
+    }
+
+    /**可见时调用**/
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            /**更新UI**/
+            initList();
+            adapter.checkList.clear();
+            adapter.checkMap.clear();
+            adapter.initCheckMap();
+            adapter.buyMap.clear();
+            adapter.notifyDataSetChanged();
+            checkBox.setChecked(false);
+            sendMessage();
+        }
+    }
+
+    public void sendMessage() {
+        Message msg = new Message();
+        msg.what = UPDATE_TEXT;
+        handler.sendMessage(msg);
     }
 }

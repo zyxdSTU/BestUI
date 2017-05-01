@@ -84,7 +84,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="20sp"
-                        android:text="0.58888"
                         android:textColor="#F44336"/>
                 </LinearLayout>
 
@@ -104,7 +103,7 @@
                 android:background="#66BB6A"
                 android:layout_width="100dp"
                 android:layout_height="match_parent"
-                android:text="去结算"/>
+                android:text="去结算 (0)"/>
         </LinearLayout>
 
         <View

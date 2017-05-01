@@ -5,16 +5,19 @@ import android.coolweather.com.bestui.AddressActivity;
 import android.coolweather.com.bestui.CollectActivity;
 import android.coolweather.com.bestui.JavaBean.Address;
 import android.coolweather.com.bestui.R;
+import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import android.support.v4.app.Fragment;
 /**
  * Created by Administrator on 2017/4/9.
  */
 
-public class UserFragment extends BaseFragment implements View.OnClickListener{
+public class UserFragment extends Fragment implements View.OnClickListener{
     private TextView infoText;
     private TextView orderText;
     private TextView collectText;
@@ -24,9 +27,9 @@ public class UserFragment extends BaseFragment implements View.OnClickListener{
     private Button exitButton;
 
     @Override
-    public View initView() {
-        View view = View.inflate(mContext, R.layout.layout_user, null);
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.layout_user, container, false);
         infoText = (TextView) view.findViewById(R.id.info_text);
         orderText = (TextView) view.findViewById(R.id.order_text);
         collectText = (TextView) view.findViewById(R.id.collect_text);
@@ -45,21 +48,15 @@ public class UserFragment extends BaseFragment implements View.OnClickListener{
 
         return view;
     }
-
-    @Override
-    public View initData() {
-        return null;
-    }
-
     @Override
     public void onClick(View view) {
         int id = view.getId();
         switch(id) {
             case R.id.info_text:
-                Toast.makeText(mContext, "info_text", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "info_text", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.order_text:
-                Toast.makeText(mContext, "order_text", Toast.LENGTH_SHORT).show();
+                gotoOrderActivity();
                 break;
             case R.id.collect_text:
                 gotoCollect();
@@ -68,13 +65,13 @@ public class UserFragment extends BaseFragment implements View.OnClickListener{
                 gotoAddressActivity();
                 break;
             case R.id.system_text:
-                Toast.makeText(mContext, "system_text", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "system_text", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.help_text:
-                Toast.makeText(mContext, "help_text", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "help_text", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.exit_button:
-                Toast.makeText(mContext, "exit_button", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "exit_button", Toast.LENGTH_SHORT).show();
                 break;
             default:
                 break;
@@ -82,12 +79,16 @@ public class UserFragment extends BaseFragment implements View.OnClickListener{
     }
 
     public void gotoCollect() {
-        Intent intent = new Intent(mContext, CollectActivity.class);
+        Intent intent = new Intent(getContext(), CollectActivity.class);
         startActivity(intent);
     }
 
     public void gotoAddressActivity() {
         Intent intent = new Intent(getContext(), AddressActivity.class);
         startActivity(intent);
+    }
+
+    public void gotoOrderActivity() {
+
     }
 }

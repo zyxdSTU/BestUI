@@ -2,12 +2,14 @@ package android.coolweather.com.bestui.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.coolweather.com.bestui.JavaBean.ProduceCart;
 import android.coolweather.com.bestui.ProduceItemActivity;
 import android.coolweather.com.bestui.R;
 import android.coolweather.com.bestui.util.Quantity;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +18,12 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.coolweather.com.bestui.JavaBean.Produce;
-
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
-
 import java.util.ArrayList;
 import java.util.HashMap;
+import static android.coolweather.com.bestui.util.HttpUtil.urlImage;
+
 /**
  * Created by Administrator on 2017/4/13.
  */
@@ -31,11 +33,10 @@ public class ProduceCartAdapter extends RecyclerView.Adapter<ProduceCartAdapter.
     private Context mContext;
     private Handler mhandler;
     final int UPDATE_TEXT = 1;
-    private ArrayList<Produce> mProduceList;
+    private ArrayList<ProduceCart> mProduceCartList;
     public ArrayList<Integer> checkList;
-
-    public HashMap<Produce, Double> buyMap;
-    public HashMap<Produce, Double> checkMap;
+    public HashMap<ProduceCart, Double> buyMap;
+    public HashMap<ProduceCart, Double> checkMap;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView produceImage;
@@ -58,21 +59,18 @@ public class ProduceCartAdapter extends RecyclerView.Adapter<ProduceCartAdapter.
 
             view.setOnLongClickListener(new View.OnLongClickListener() {
                 public boolean onLongClick(View view) {
-
                     return false;
                 }
             });
         }
     }
 
-    public ProduceCartAdapter(ArrayList<Produce> produceArrayList, Handler handler) {
-        mProduceList= produceArrayList;
+    public ProduceCartAdapter(ArrayList<ProduceCart> produceCartList, Handler handler) {
+        mProduceCartList= produceCartList;
         checkList = new ArrayList<Integer>();
         buyMap = new HashMap<>();
-
         checkMap = new HashMap<>();
         initCheckMap();
-
         mhandler = handler;
     }
 
@@ -90,7 +88,7 @@ public class ProduceCartAdapter extends RecyclerView.Adapter<ProduceCartAdapter.
             @Override
             public void onClick(View view) {
                 int position = holder.getAdapterPosition();
-                Produce produce = mProduceList.get(position);
+                ProduceCart produce = mProduceCartList.get(position);
                 Intent intent = new Intent(mContext, ProduceItemActivity.class);
                 intent.putExtra("produce",new Gson().toJson(produce));
                 mContext.startActivity(intent);
@@ -119,10 +117,11 @@ public class ProduceCartAdapter extends RecyclerView.Adapter<ProduceCartAdapter.
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        Produce produce = mProduceList.get(position);
-        holder.produceImage.setImageResource(produce.getImageId());
-        holder.produceName.setText(produce.getName());
-        holder.producePrice.setText("¥" + String.valueOf(produce.getPrice()));
+        ProduceCart produceCart = mProduceCartList.get(position);
+        String tempUrl = urlImage + produceCart.getImage();
+        Glide.with(mContext).load(tempUrl).into(holder.produceImage);
+        holder.produceName.setText(produceCart.getName());
+        holder.producePrice.setText("¥" + String.valueOf(produceCart.getPrice()));
 
 
         /**
@@ -147,8 +146,7 @@ public class ProduceCartAdapter extends RecyclerView.Adapter<ProduceCartAdapter.
                         Message msg = new Message();
                         msg.what = UPDATE_TEXT;
                         mhandler.sendMessage(msg);
-                        buyMap.put(mProduceList.get(position), Double.parseDouble(holder.quantityText.getText().toString()));
-
+                        buyMap.put(mProduceCartList.get(position), Double.parseDouble(holder.quantityText.getText().toString()));
                         checkList.add((Integer)holder.checkBox.getTag());
                     }
                 }else {
@@ -159,7 +157,7 @@ public class ProduceCartAdapter extends RecyclerView.Adapter<ProduceCartAdapter.
                         Message msg = new Message();
                         msg.what = UPDATE_TEXT;
                         mhandler.sendMessage(msg);
-                        buyMap.remove(mProduceList.get(position));
+                        buyMap.remove(mProduceCartList.get(position));
 
                         checkList.remove(holder.checkBox.getTag());
                     }
@@ -170,20 +168,20 @@ public class ProduceCartAdapter extends RecyclerView.Adapter<ProduceCartAdapter.
 
     @Override
     public int getItemCount() {
-        return mProduceList.size();
+        return mProduceCartList.size();
     }
 
     public void initCheckMap() {
-        for(int i = 0; i < mProduceList.size(); i++) {
-            checkMap.put(mProduceList.get(i), 0.5);
+        for(int i = 0; i < mProduceCartList.size(); i++) {
+            checkMap.put(mProduceCartList.get(i), 0.5);
         }
     }
 
     public void synchMap(ViewHolder holder) {
-        checkMap.put(mProduceList.get(holder.getAdapterPosition()), Double.parseDouble(holder.quantityText.getText().toString()));
+        checkMap.put(mProduceCartList.get(holder.getAdapterPosition()), Double.parseDouble(holder.quantityText.getText().toString()));
 
-        if(buyMap.containsKey(mProduceList.get(holder.getAdapterPosition()))) {
-            buyMap.put(mProduceList.get(holder.getAdapterPosition()), Double.parseDouble(holder.quantityText.getText().toString()));
+        if(buyMap.containsKey(mProduceCartList.get(holder.getAdapterPosition()))) {
+            buyMap.put(mProduceCartList.get(holder.getAdapterPosition()), Double.parseDouble(holder.quantityText.getText().toString()));
             Message msg = new Message();
             msg.what = UPDATE_TEXT;
             mhandler.sendMessage(msg);

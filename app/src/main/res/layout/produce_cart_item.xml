@@ -16,7 +16,6 @@
 
     <ImageView
         android:id="@+id/produce_image"
-        android:src="@drawable/apple"
         android:scaleType="fitXY"
         android:layout_gravity="center"
         android:adjustViewBounds="true"

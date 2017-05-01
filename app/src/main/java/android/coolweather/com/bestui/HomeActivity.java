@@ -1,19 +1,17 @@
 package android.coolweather.com.bestui;
 
 import android.coolweather.com.bestui.adapter.FragmentAdapter;
-import android.coolweather.com.bestui.fragment.BaseFragment;
 import android.coolweather.com.bestui.fragment.CartFragment;
 import android.coolweather.com.bestui.fragment.HomeFragment;
 import android.coolweather.com.bestui.fragment.UserFragment;
 import android.graphics.Color;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -29,7 +27,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private TextView userTextView;
 
     //碎片数组
-    private ArrayList<BaseFragment> mList;
+    private ArrayList<Fragment> mList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,12 +43,12 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         userTextView = (TextView) findViewById(R.id.user_text_view);
 
         //碎片加入数组
-        mList = new ArrayList<BaseFragment>();
+        mList = new ArrayList<Fragment>();
         mList.add(new HomeFragment());
         mList.add(new CartFragment());
         mList.add(new UserFragment());
 
-        FragmentAdapter fragmentAdapter = new FragmentAdapter(getSupportFragmentManager(), mList);
+        final FragmentAdapter fragmentAdapter = new FragmentAdapter(getSupportFragmentManager(), mList);
         viewPager.setAdapter(fragmentAdapter);
 
         homeButton.setOnClickListener(this);

@@ -1,18 +1,23 @@
 package android.coolweather.com.bestui;
 
 import android.coolweather.com.bestui.JavaBean.Produce;
+import android.coolweather.com.bestui.JavaBean.ProduceCart;
+import android.coolweather.com.bestui.JavaBean.ProduceCollect;
 import android.coolweather.com.bestui.adapter.ProduceCollectAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+
+import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
 
 public class CollectActivity extends AppCompatActivity implements View.OnClickListener{
-    private ArrayList<Produce> produceList = new ArrayList<Produce>();
+    private ArrayList<ProduceCollect> produceCollectList = new ArrayList<ProduceCollect>();
     private ProduceCollectAdapter adapter;
     private ImageButton trashButton;
     private RecyclerView recyclerView;
@@ -25,7 +30,7 @@ public class CollectActivity extends AppCompatActivity implements View.OnClickLi
         initList();
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new ProduceCollectAdapter(produceList);
+        adapter = new ProduceCollectAdapter(produceCollectList);
         recyclerView.setAdapter(adapter);
         trashButton = (ImageButton) findViewById(R.id.trash_button);
         trashButton.setOnClickListener(this);
@@ -44,25 +49,28 @@ public class CollectActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     public void deleteItem() {
-        ArrayList<Produce> tempProduceList = new ArrayList<>();
+        ArrayList<ProduceCollect> tempProduceList = new ArrayList<>();
 
-        for(int i = 0; i < produceList.size(); i++) {
+        for(int i = 0; i < produceCollectList.size(); i++) {
             if(!adapter.checkList.contains(new Integer(i))) {
-                tempProduceList.add(produceList.get(i));
+                tempProduceList.add(produceCollectList.get(i));
             }
         }
-        produceList.clear();
-        produceList.addAll(tempProduceList);
+
+        /**更新数据库**/
+        DataSupport.deleteAll(ProduceCollect.class);
+        for(ProduceCollect produceCollect : tempProduceList) {
+           new ProduceCollect(produceCollect).save();
+        }
+
+        produceCollectList.clear();
+        produceCollectList.addAll(tempProduceList);
         adapter.checkList.clear();
         adapter.notifyDataSetChanged();
     }
 
     public void initList() {
-        for(int i = 0; i < 10; i++) {
-            produceList.add(new Produce(R.drawable.apple, "苹果", 22, "十分新鲜"));
-            produceList.add(new Produce(R.drawable.pear, "梨", 33, "很不错"));
-            produceList.add(new Produce(R.drawable.grape, "葡萄", 22, "很美味"));
-        }
+        produceCollectList.clear();
+        produceCollectList.addAll(DataSupport.findAll(ProduceCollect.class));
     }
-
 }

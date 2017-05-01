@@ -2,6 +2,9 @@ package android.coolweather.com.bestui;
 
 import android.content.Intent;
 import android.coolweather.com.bestui.JavaBean.Produce;
+import android.coolweather.com.bestui.JavaBean.ProduceCart;
+import android.coolweather.com.bestui.JavaBean.ProduceCollect;
+import android.coolweather.com.bestui.util.HttpUtil;
 import android.coolweather.com.bestui.util.Quantity;
 import android.graphics.Color;
 import android.os.Build;
@@ -11,7 +14,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 
 public class ProduceItemActivity extends AppCompatActivity implements View.OnClickListener{
@@ -72,10 +77,10 @@ public class ProduceItemActivity extends AppCompatActivity implements View.OnCli
     }
 
     public void initData() {
-        produceImage.setImageResource(produce.getImageId());
+        Glide.with(this).load(HttpUtil.urlImage + produce.getImage()).into(produceImage);
         produceName.setText(produce.getName());
         producePrice.setText("¥" + String.valueOf(produce.getPrice()));
-        produceText.setText(produce.getText());
+        produceText.setText(produce.getDescription());
         quantityText.setText("0.5");
     }
 
@@ -92,6 +97,14 @@ public class ProduceItemActivity extends AppCompatActivity implements View.OnCli
             case R.id.home_button:
                 gotoHome();
                 break;
+            case R.id.collect_button:
+                addCollect();
+                Toast.makeText(this, "已添加收藏", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.cart_button:
+                addCart();
+                Toast.makeText(this, "已添加购物车", Toast.LENGTH_SHORT).show();
+                break;
             default:
                 break;
         }
@@ -100,5 +113,13 @@ public class ProduceItemActivity extends AppCompatActivity implements View.OnCli
     public void gotoHome() {
         Intent intent = new Intent(this, HomeActivity.class);
         startActivity(intent);
+    }
+
+    public void addCollect() {
+        new ProduceCollect(produce).save();
+    }
+
+    public void addCart() {
+        new ProduceCart(produce).save();
     }
 }

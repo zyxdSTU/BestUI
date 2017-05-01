@@ -1,24 +1,28 @@
 package android.coolweather.com.bestui.JavaBean;
 
+import org.litepal.crud.DataSupport;
+
 /**
  * Created by Administrator on 2017/4/14.
  */
 
-public class Produce {
-    private int imageId;
+public class Produce extends DataSupport{
+    private long image;
     private String name;
     private double  price;
-    private String text;
+    private String description;
 
-    public Produce(int imageId, String name, double price, String text) {
-        this.imageId = imageId;
+    public Produce() {}
+
+    public Produce(long image, String name, double price, String description) {
+        this.image = image;
         this.name = name;
         this.price = price;
-        this.text = text;
+        this.description = description;
     }
 
-    public int getImageId() {
-        return imageId;
+    public long getImage() {
+        return image;
     }
 
     public String getName() {
@@ -29,12 +33,12 @@ public class Produce {
         return price;
     }
 
-    public String getText() {
-        return text;
+    public String getDescription() {
+        return description;
     }
 
-    public void setImageId(int imageId) {
-        this.imageId = imageId;
+    public void setImage(long image) {
+        this.image = image;
     }
 
     public void setName(String name) {
@@ -45,8 +49,8 @@ public class Produce {
         this.price = price;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
 }

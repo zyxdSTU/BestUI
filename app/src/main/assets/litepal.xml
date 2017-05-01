@@ -4,5 +4,9 @@
     <version value="1"></version>
     <list>
         <mapping class="android.coolweather.com.bestui.JavaBean.Address"></mapping>
+        <mapping class="android.coolweather.com.bestui.JavaBean.Produce"></mapping>
+        <mapping class="android.coolweather.com.bestui.JavaBean.ProduceCart"></mapping>
+        <mapping class="android.coolweather.com.bestui.JavaBean.ProduceCollect"></mapping>.
+        <mapping class="android.coolweather.com.bestui.JavaBean.Orsder"></mapping>
     </list>
 </litepal>

@@ -7,6 +7,7 @@ package android.coolweather.com.bestui.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.coolweather.com.bestui.JavaBean.Produce;
+import android.coolweather.com.bestui.JavaBean.ProduceCollect;
 import android.coolweather.com.bestui.ProduceItemActivity;
 import android.coolweather.com.bestui.R;
 import android.support.v7.widget.RecyclerView;
@@ -17,8 +18,12 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import java.util.ArrayList;
+
+import static android.coolweather.com.bestui.util.HttpUtil.urlImage;
 
 /**
  * Created by Administrator on 2017/4/13.
@@ -27,7 +32,7 @@ import java.util.ArrayList;
 public class ProduceCollectAdapter extends RecyclerView.Adapter<ProduceCollectAdapter.ViewHolder> {
 
     private Context mContext;
-    private ArrayList<Produce> mProduceList;
+    private ArrayList<ProduceCollect> mProduceCollectList;
     public ArrayList<Integer> checkList;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -45,8 +50,8 @@ public class ProduceCollectAdapter extends RecyclerView.Adapter<ProduceCollectAd
         }
     }
 
-    public ProduceCollectAdapter(ArrayList<Produce> produceArrayList) {
-        mProduceList= produceArrayList;
+    public ProduceCollectAdapter(ArrayList<ProduceCollect> produceCollectList) {
+        mProduceCollectList= produceCollectList;
         checkList = new ArrayList<>();
     }
 
@@ -64,9 +69,9 @@ public class ProduceCollectAdapter extends RecyclerView.Adapter<ProduceCollectAd
             @Override
             public void onClick(View view) {
                 int position = holder.getAdapterPosition();
-                Produce produce = mProduceList.get(position);
+                ProduceCollect produceCollect = mProduceCollectList.get(position);
                 Intent intent=new Intent(mContext, ProduceItemActivity.class);
-                intent.putExtra("produce",new Gson().toJson(produce));
+                intent.putExtra("produce",new Gson().toJson(produceCollect));
                 mContext.startActivity(intent);
             }
         });
@@ -75,10 +80,11 @@ public class ProduceCollectAdapter extends RecyclerView.Adapter<ProduceCollectAd
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        Produce produce = mProduceList.get(position);
-        holder.produceImage.setImageResource(produce.getImageId());
-        holder.produceName.setText(produce.getName());
-        holder.producePrice.setText("¥" + String.valueOf(produce.getPrice()));
+        ProduceCollect produceCollect = mProduceCollectList.get(position);
+        String tempUrl = urlImage + produceCollect.getImage();
+        Glide.with(mContext).load(tempUrl).into(holder.produceImage);
+        holder.produceName.setText(produceCollect.getName());
+        holder.producePrice.setText("¥" + String.valueOf(produceCollect.getPrice()));
 
         /**
          * 防止checkbox乱序
@@ -108,7 +114,7 @@ public class ProduceCollectAdapter extends RecyclerView.Adapter<ProduceCollectAd
     }
     @Override
     public int getItemCount() {
-        return mProduceList.size();
+        return mProduceCollectList.size();
     }
 
 

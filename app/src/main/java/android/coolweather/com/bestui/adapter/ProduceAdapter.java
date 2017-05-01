@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.coolweather.com.bestui.ProduceItemActivity;
 import android.coolweather.com.bestui.R;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +13,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.coolweather.com.bestui.JavaBean.Produce;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+
+import static android.coolweather.com.bestui.util.HttpUtil.urlImage;
 
 /**
  * Created by Administrator on 2017/4/13.
@@ -69,7 +73,8 @@ public class ProduceAdapter extends RecyclerView.Adapter<ProduceAdapter.ViewHold
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Produce produce = mProduceList.get(position);
-        holder.produceImage.setImageResource(produce.getImageId());
+        String tempUrl = urlImage + produce.getImage();
+        Glide.with(mContext).load(tempUrl).into(holder.produceImage);
         holder.produceName.setText(produce.getName());
         holder.producePrice.setText("¥" + String.valueOf(produce.getPrice()));
     }

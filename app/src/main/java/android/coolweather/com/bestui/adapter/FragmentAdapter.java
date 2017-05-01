@@ -1,9 +1,11 @@
 package android.coolweather.com.bestui.adapter;
 
-import android.coolweather.com.bestui.fragment.BaseFragment;
+import android.coolweather.com.bestui.fragment.CartFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
+import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
@@ -14,9 +16,9 @@ import java.util.ArrayList;
 public class FragmentAdapter extends FragmentPagerAdapter {
 
     //碎片数据
-    private ArrayList<BaseFragment> mList;
+    private ArrayList<Fragment> mList;
 
-    public FragmentAdapter(FragmentManager fragmentManager,ArrayList<BaseFragment>mList) {
+    public FragmentAdapter(FragmentManager fragmentManager,ArrayList<Fragment>mList) {
         super(fragmentManager);
         this.mList = mList;
     }
@@ -30,4 +32,5 @@ public class FragmentAdapter extends FragmentPagerAdapter {
     public int getCount() {
         return mList.size();
     }
+
 }

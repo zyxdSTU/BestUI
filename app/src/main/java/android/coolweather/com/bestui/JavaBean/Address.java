@@ -12,6 +12,7 @@ public class Address extends DataSupport{
     private String address;
     private boolean status;
 
+    public Address() {}
     public Address(String name, String phoneNum, String address, boolean status) {
         this.name = name;
         this.phoneNum = phoneNum;
