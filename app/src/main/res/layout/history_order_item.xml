@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/identity_text"
+        android:gravity="center_vertical"
+        android:background="#FAFAFA"
+        android:text="订单号： 201751224523"
+        android:layout_width="match_parent"
+        android:layout_height="30dp" />
+
+    <include layout="@layout/line"/>
+
+    <LinearLayout
+        android:id="@+id/add_linearLayout"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </LinearLayout>
+
+    <LinearLayout
+        android:background="#FAFAFA"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="30dp" >
+
+
+        <TextView
+            android:layout_marginLeft="155dp"
+            android:textSize="16sp"
+            android:gravity="bottom"
+            android:id="@+id/totalQuantity_text"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="共计2件商品    合计："/>
+
+        <TextView
+            android:id="@+id/totalMoney_text"
+            android:textColor="#F44336"
+            android:textSize="18sp"
+            android:gravity="bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="¥22.25"/>
+    </LinearLayout>
+
+    <include layout="@layout/line"/>
+    <RelativeLayout
+        android:background="#FAFAFA"
+        android:layout_width="match_parent"
+        android:layout_height="35dp">
+        <Button
+            android:id="@+id/cancel_button"
+            android:background="#4CAF50"
+            android:textColor="#FAFAFA"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textSize="12sp"
+            android:text="取消订单"/>
+    </RelativeLayout>
+
+    <include layout="@layout/line"/>
+    <include layout="@layout/line"/>
+    <include layout="@layout/line"/>
+    <include layout="@layout/line"/>
+</LinearLayout>

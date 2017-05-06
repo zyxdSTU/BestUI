@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:background="#4CAF50"
+        android:layout_height="?attr/actionBarSize">
+
+        <TextView
+            android:layout_marginRight="8dp"
+            android:clickable="true"
+            android:id="@+id/sure_text"
+            android:layout_marginLeft="270dp"
+            android:text="完成"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:textColor="#FFFFFF"/>
+
+        <ImageButton
+            android:id="@+id/sure_button"
+            android:background="#4CAF50"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/sure"/>
+
+    </android.support.v7.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_marginRight="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/bigsure"/>
+
+        <TextView
+            android:textColor="#4CAF50"
+            android:textSize="30sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="购物成功"/>
+
+    </LinearLayout>
+</LinearLayout>

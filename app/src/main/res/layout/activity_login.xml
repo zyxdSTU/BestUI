@@ -27,10 +27,11 @@
         android:layout_height="50dp">
 
         <ImageView
-            android:layout_width="40dp"
-            android:layout_height="35dp"
+            android:layout_width="35dp"
+            android:layout_height="30dp"
             android:src="@drawable/phone"/>
         <EditText
+            android:textSize="16sp"
             android:gravity="center_vertical"
             android:background="@null"
             android:paddingLeft="30dp"
@@ -49,14 +50,15 @@
     <LinearLayout
         android:gravity="center_vertical"
         android:layout_width="match_parent"
-        android:layout_height="60dp">
+        android:layout_height="50dp">
 
         <ImageView
-            android:layout_width="40dp"
-            android:layout_height="35dp"
+            android:layout_width="35dp"
+            android:layout_height="30dp"
             android:src="@drawable/lock"/>
 
         <EditText
+            android:textSize="16sp"
             android:background="@null"
             android:id="@+id/password_text"
             android:maxLength="12"
@@ -80,23 +82,25 @@
         android:layout_height="wrap_content">
 
         <Button
+            android:textSize="12sp"
             android:layout_alignParentLeft="true"
             android:id="@+id/login_button"
-            android:layout_marginLeft="30dp"
+            android:layout_marginLeft="5dp"
             android:textColor="#FFFFFF"
             android:background="@drawable/rect"
-            android:layout_width="120dp"
-            android:layout_height="40dp"
+            android:layout_width="125dp"
+            android:layout_height="35dp"
             android:text="登录"/>
 
         <Button
+            android:textSize="12sp"
             android:layout_alignParentRight="true"
             android:id="@+id/register_button"
-            android:layout_marginRight="30dp"
+            android:layout_marginRight="5dp"
             android:textColor="#FFFFFF"
             android:background="@drawable/rect"
-            android:layout_width="120dp"
-            android:layout_height="40dp"
+            android:layout_width="125dp"
+            android:layout_height="35dp"
             android:text="注册"/>
     </RelativeLayout>
 </LinearLayout>

@@ -10,6 +10,7 @@ import android.coolweather.com.bestui.JavaBean.Produce;
 import android.coolweather.com.bestui.JavaBean.ProduceCollect;
 import android.coolweather.com.bestui.ProduceItemActivity;
 import android.coolweather.com.bestui.R;
+import android.coolweather.com.bestui.util.DataBase;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +22,11 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+
+import org.litepal.crud.DataSupport;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import static android.coolweather.com.bestui.util.HttpUtil.urlImage;
 
@@ -71,7 +76,8 @@ public class ProduceCollectAdapter extends RecyclerView.Adapter<ProduceCollectAd
                 int position = holder.getAdapterPosition();
                 ProduceCollect produceCollect = mProduceCollectList.get(position);
                 Intent intent=new Intent(mContext, ProduceItemActivity.class);
-                intent.putExtra("produce",new Gson().toJson(produceCollect));
+                Produce produce = DataBase.selectProduceByName(produceCollect.getName());
+                intent.putExtra("produce",new Gson().toJson(produce));
                 mContext.startActivity(intent);
             }
         });
@@ -81,10 +87,11 @@ public class ProduceCollectAdapter extends RecyclerView.Adapter<ProduceCollectAd
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         ProduceCollect produceCollect = mProduceCollectList.get(position);
-        String tempUrl = urlImage + produceCollect.getImage();
+        Produce produce = DataBase.selectProduceByName(produceCollect.getName());
+        String tempUrl = urlImage + produce.getImage();
         Glide.with(mContext).load(tempUrl).into(holder.produceImage);
-        holder.produceName.setText(produceCollect.getName());
-        holder.producePrice.setText("¥" + String.valueOf(produceCollect.getPrice()));
+        holder.produceName.setText(produce.getName());
+        holder.producePrice.setText("¥" + String.valueOf(produce.getPrice()));
 
         /**
          * 防止checkbox乱序

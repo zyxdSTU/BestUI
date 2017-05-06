@@ -2,11 +2,15 @@ package android.coolweather.com.bestui;
 
 import android.content.Intent;
 import android.coolweather.com.bestui.JavaBean.Address;
-import android.coolweather.com.bestui.JavaBean.Orsder;
+import android.coolweather.com.bestui.JavaBean.OrderAddress;
+import android.coolweather.com.bestui.JavaBean.OrderProduces;
+import android.coolweather.com.bestui.JavaBean.Produce;
 import android.coolweather.com.bestui.JavaBean.ProduceCart;
 import android.coolweather.com.bestui.JavaBean.Produces;
 import android.coolweather.com.bestui.JavaBean.SerializableMap;
 import android.coolweather.com.bestui.adapter.ProduceOrderAdapter;
+import android.coolweather.com.bestui.util.HttpUtil;
+import android.coolweather.com.bestui.util.Time;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,8 +22,11 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import org.litepal.crud.DataSupport;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,6 +34,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
+
+import static android.coolweather.com.bestui.util.HttpUtil.urlOrderAddress;
+import static android.coolweather.com.bestui.util.HttpUtil.urlOrderProduces;
 
 public class OrderActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -71,14 +85,20 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
     public void initList() {
         Bundle bundle = getIntent().getExtras();
         SerializableMap buyMapF = (SerializableMap) bundle.get("buyMapF");
-        HashMap<ProduceCart, Double> buyMap = buyMapF.getMap();
+        if(buyMapF != null) {
+            HashMap<ProduceCart, Double> buyMap = buyMapF.getMap();
 
-        Iterator iterator = buyMap.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry entry = (Map.Entry) iterator.next();
-            ProduceCart key = (ProduceCart) entry.getKey();
-            Double value = (Double) entry.getValue();
-            producesList.add(new Produces(key, value));
+            Iterator iterator = buyMap.entrySet().iterator();
+            while (iterator.hasNext()) {
+                Map.Entry entry = (Map.Entry) iterator.next();
+                ProduceCart key = (ProduceCart) entry.getKey();
+                Double value = (Double) entry.getValue();
+                producesList.add(new Produces(key, value));
+            }
+        }
+        String producesJson = getIntent().getStringExtra("produces");
+        if(producesJson != null) {
+            producesList.add(new Gson().fromJson(producesJson, Produces.class));
         }
     }
 
@@ -104,31 +124,6 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         super.onResume();
     }
 
-    public void test() {
-        SimpleDateFormat formatter =  new  SimpleDateFormat("yyyy年MM月dd日HH:mm:ss");
-        Date curDate = new Date(System.currentTimeMillis());//获取当前时间
-        String str = formatter.format(curDate);
-
-        Orsder order = new Orsder();
-        order.setAddress(address);
-        order.setProduceList(producesList);
-        order.setId(str);
-        order.save();
-
-        List<Orsder> orderTempList = DataSupport.findAll(Orsder.class);
-        Log.d("MainActivity", String.valueOf(orderTempList.size()));
-        //Orsder orderTemp = orderTempList.get(0);
-        //Log.d("MainActivity", orderTemp.getAddress().getAddress());
-       //Log.d("MainActivity", orderTemp.getProduceList().get(0).getName());
-        //Log.d("MainActivity", orderTemp.getId());
-        for(Orsder orsder: orderTempList) {
-            Log.d("MainActivity", orsder.getId());
-            Address address = orsder.getAddress();
-            if(address != null) {
-                Log.d("MainActivity", address.getAddress());
-            }
-        }
-    }
 
     @Override
     public void onClick(View view) {
@@ -151,9 +146,67 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
 
     public void submit() {
         if(addressFlag) {
-            test();
+            String identifier = Time.getCurrentTime();
+            OrderAddress orderAddress = new OrderAddress();
+            orderAddress.setAddressObject(address);
+            orderAddress.setIdentifier(identifier);
+            orderAddress.save();
+
+            List<OrderProduces> orderProducesList = new ArrayList<>();
+            for(Produces produces : producesList) {
+                OrderProduces orderProduces = new OrderProduces();
+                orderProduces.setIdentifier(identifier);
+                orderProduces.setProduceName(produces.getName());
+                orderProduces.setQuantity(produces.getQuantity());
+                orderProducesList.add(orderProduces);
+                orderProduces.save();
+            }
+            /**发送订单数据**/
+            String orderAddressStr = new Gson().toJson(orderAddress);
+            String orderProducesListStr = new Gson().toJson(orderProducesList);
+            Log.d("MainActivity", orderAddressStr);
+            Log.d("MainActivity", orderProducesListStr);
+            sendToServer(orderAddressStr, orderProducesListStr);
+
+            startActivity(new Intent(OrderActivity.this, SubmitActivity.class));
         } else{
             Toast.makeText(OrderActivity.this, "没有默认地址,请添加", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void sendToServer(String orderAddressStr, String orderProducesListStr) {
+        HttpUtil.sendOKHttpPost(orderAddressStr, urlOrderAddress, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(OrderActivity.this, "发送订单数据失败", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+            }
+        });
+
+        HttpUtil.sendOKHttpPost(orderProducesListStr, urlOrderProduces, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(OrderActivity.this, "发送订单数据失败", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+            }
+        });
     }
 }

@@ -7,6 +7,7 @@
         <mapping class="android.coolweather.com.bestui.JavaBean.Produce"></mapping>
         <mapping class="android.coolweather.com.bestui.JavaBean.ProduceCart"></mapping>
         <mapping class="android.coolweather.com.bestui.JavaBean.ProduceCollect"></mapping>.
-        <mapping class="android.coolweather.com.bestui.JavaBean.Orsder"></mapping>
+        <mapping class="android.coolweather.com.bestui.JavaBean.OrderAddress"></mapping>
+        <mapping class="android.coolweather.com.bestui.JavaBean.OrderProduces"></mapping>
     </list>
 </litepal>

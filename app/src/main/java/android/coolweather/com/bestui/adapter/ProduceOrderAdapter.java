@@ -7,6 +7,7 @@ import android.coolweather.com.bestui.JavaBean.ProduceCart;
 import android.coolweather.com.bestui.JavaBean.Produces;
 import android.coolweather.com.bestui.ProduceItemActivity;
 import android.coolweather.com.bestui.R;
+import android.coolweather.com.bestui.util.DataBase;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+
+import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -79,10 +82,11 @@ public class ProduceOrderAdapter extends RecyclerView.Adapter<ProduceOrderAdapte
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Produces produces = mProducesList.get(position);
-        String tempUrl = urlImage + produces.getImage();
+        Produce produce = DataBase.selectProduceByName(produces.getName());
+        String tempUrl = urlImage + produce.getImage();
         Glide.with(mContext).load(tempUrl).into(holder.produceImage);
-        holder.produceName.setText(produces.getName());
-        holder.producePrice.setText("¥" + String.valueOf(produces.getPrice()));
+        holder.produceName.setText(produce.getName());
+        holder.producePrice.setText("¥" + String.valueOf(produce.getPrice()));
         holder.produceQuantity.setText("× " + String.valueOf(produces.getQuantity()));
     }
 
@@ -92,11 +96,8 @@ public class ProduceOrderAdapter extends RecyclerView.Adapter<ProduceOrderAdapte
     }
 
     public Produce changetoProduce(Produces produces) {
-        Produce produce = new Produce();
-        produce.setImage(produces.getImage());
-        produce.setName(produces.getName());
-        produce.setDescription(produces.getDescription());
-        produce.setPrice(produces.getPrice());
+        List<Produce> list = DataSupport.where("name = ?", produces.getName()).find(Produce.class);
+        Produce produce = list.get(0);
         return produce;
     }
 }

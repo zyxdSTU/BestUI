@@ -7,6 +7,7 @@ import android.coolweather.com.bestui.JavaBean.SerializableMap;
 import android.coolweather.com.bestui.OrderActivity;
 import android.coolweather.com.bestui.R;
 import android.coolweather.com.bestui.adapter.ProduceCartAdapter;
+import android.coolweather.com.bestui.util.DataBase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -103,7 +104,11 @@ public class CartFragment extends Fragment implements View.OnClickListener{
      */
     public void initList() {
         produceCartList.clear();
-        produceCartList.addAll(DataSupport.findAll(ProduceCart.class));
+        for(ProduceCart produceCart : DataSupport.findAll(ProduceCart.class)) {
+            if(DataBase.isExitProduce(produceCart.getName())) {
+                produceCartList.add(produceCart);
+            }
+        }
     }
 
     @Override
@@ -135,7 +140,7 @@ public class CartFragment extends Fragment implements View.OnClickListener{
         /**更新数据库**/
         DataSupport.deleteAll(ProduceCart.class);
         for(ProduceCart produceCart : tempProduceList) {
-            new ProduceCart(produceCart).save();
+            new ProduceCart(produceCart.getName()).save();
         }
 
         produceCartList.clear();
@@ -207,7 +212,9 @@ public class CartFragment extends Fragment implements View.OnClickListener{
             Map.Entry entry = (Map.Entry) iterator.next();
             ProduceCart key = (ProduceCart) entry.getKey();
             Double value = (Double) entry.getValue();
-            total += value * key.getPrice();
+
+            Produce produce = DataBase.selectProduceByName(key.getName());
+            total += value * produce.getPrice();
         }
         totalText.setText("¥" + String.valueOf(total));
         calculateButton.setText("去结算 (" + adapter.buyMap.size()+")");

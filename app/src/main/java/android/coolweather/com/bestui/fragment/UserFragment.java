@@ -3,7 +3,9 @@ package android.coolweather.com.bestui.fragment;
 import android.content.Intent;
 import android.coolweather.com.bestui.AddressActivity;
 import android.coolweather.com.bestui.CollectActivity;
+import android.coolweather.com.bestui.HistoryOrderActivity;
 import android.coolweather.com.bestui.JavaBean.Address;
+import android.coolweather.com.bestui.LoginActivity;
 import android.coolweather.com.bestui.R;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -71,7 +73,7 @@ public class UserFragment extends Fragment implements View.OnClickListener{
                 Toast.makeText(getContext(), "help_text", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.exit_button:
-                Toast.makeText(getContext(), "exit_button", Toast.LENGTH_SHORT).show();
+                exit();
                 break;
             default:
                 break;
@@ -89,6 +91,12 @@ public class UserFragment extends Fragment implements View.OnClickListener{
     }
 
     public void gotoOrderActivity() {
+        Intent intent = new Intent(getContext(), HistoryOrderActivity.class);
+        startActivity(intent);
+    }
 
+    public void exit() {
+        Intent intent = new Intent(getContext(), LoginActivity.class);
+        startActivity(intent);
     }
 }

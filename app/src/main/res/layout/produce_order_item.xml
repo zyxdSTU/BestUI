@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="#FAFAFA"
-    android:layout_marginBottom="2dp"
+    android:layout_marginBottom="1dp"
     android:layout_width="match_parent"
-    android:layout_height="80dp">
-
+    android:layout_height="65dp">
     <ImageView
         android:src="@drawable/banana"
         android:id="@+id/produce_image"
@@ -12,7 +11,7 @@
         android:layout_gravity="center"
         android:adjustViewBounds="true"
         android:layout_width="100dp"
-        android:layout_height="70dp" />
+        android:layout_height="65dp" />
 
     <LinearLayout
         android:layout_marginTop="8dp"
@@ -24,7 +23,8 @@
             android:layout_marginBottom="2dp"
             android:id="@+id/produce_name"
             android:gravity="center"
-            android:textSize="20sp"
+            android:textSize="18sp"
+            android:text="苹果"
             android:textColor="#66BB6A"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
@@ -42,6 +42,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:id="@+id/produce_price"
+                android:text="3.5"
                 android:textColor="#EF5350"
                 android:textSize="18sp"/>
 
@@ -52,6 +53,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center"
+                android:text="X 0.5"
                 android:textSize="18sp"/>
         </LinearLayout>
     </LinearLayout>

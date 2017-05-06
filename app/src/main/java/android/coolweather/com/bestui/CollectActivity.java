@@ -4,6 +4,7 @@ import android.coolweather.com.bestui.JavaBean.Produce;
 import android.coolweather.com.bestui.JavaBean.ProduceCart;
 import android.coolweather.com.bestui.JavaBean.ProduceCollect;
 import android.coolweather.com.bestui.adapter.ProduceCollectAdapter;
+import android.coolweather.com.bestui.util.DataBase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -60,7 +61,7 @@ public class CollectActivity extends AppCompatActivity implements View.OnClickLi
         /**更新数据库**/
         DataSupport.deleteAll(ProduceCollect.class);
         for(ProduceCollect produceCollect : tempProduceList) {
-           new ProduceCollect(produceCollect).save();
+           new ProduceCollect(produceCollect.getName()).save();
         }
 
         produceCollectList.clear();
@@ -71,6 +72,10 @@ public class CollectActivity extends AppCompatActivity implements View.OnClickLi
 
     public void initList() {
         produceCollectList.clear();
-        produceCollectList.addAll(DataSupport.findAll(ProduceCollect.class));
+        for(ProduceCollect produceCollect : DataSupport.findAll(ProduceCollect.class)) {
+            if(DataBase.isExitProduce(produceCollect.getName())) {
+                produceCollectList.add(produceCollect);
+            }
+        }
     }
 }

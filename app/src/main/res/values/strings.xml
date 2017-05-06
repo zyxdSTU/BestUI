@@ -1,6 +1,7 @@
 <resources>
-    <string name="app_name">BestUI</string>
+    <string name="app_name">菜到家</string>
     <string name="titleColor">#4CAF50</string>
     <string name="statusColor">#66BB6A</string>
     <string name="textColor">#FFFFFF</string>
+    <item type="id" name="produces"/>
 </resources>

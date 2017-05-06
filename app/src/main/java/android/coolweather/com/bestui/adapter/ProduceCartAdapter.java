@@ -2,9 +2,11 @@ package android.coolweather.com.bestui.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.coolweather.com.bestui.JavaBean.Produce;
 import android.coolweather.com.bestui.JavaBean.ProduceCart;
 import android.coolweather.com.bestui.ProduceItemActivity;
 import android.coolweather.com.bestui.R;
+import android.coolweather.com.bestui.util.DataBase;
 import android.coolweather.com.bestui.util.Quantity;
 import android.os.Handler;
 import android.os.Message;
@@ -20,8 +22,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+
+import org.litepal.crud.DataSupport;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
 import static android.coolweather.com.bestui.util.HttpUtil.urlImage;
 
 /**
@@ -88,7 +95,8 @@ public class ProduceCartAdapter extends RecyclerView.Adapter<ProduceCartAdapter.
             @Override
             public void onClick(View view) {
                 int position = holder.getAdapterPosition();
-                ProduceCart produce = mProduceCartList.get(position);
+                ProduceCart produceCart = mProduceCartList.get(position);
+                Produce produce = DataBase.selectProduceByName(produceCart.getName());
                 Intent intent = new Intent(mContext, ProduceItemActivity.class);
                 intent.putExtra("produce",new Gson().toJson(produce));
                 mContext.startActivity(intent);
@@ -118,10 +126,11 @@ public class ProduceCartAdapter extends RecyclerView.Adapter<ProduceCartAdapter.
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         ProduceCart produceCart = mProduceCartList.get(position);
-        String tempUrl = urlImage + produceCart.getImage();
+        Produce produce = DataBase.selectProduceByName(produceCart.getName());
+        String tempUrl = urlImage + produce.getImage();
         Glide.with(mContext).load(tempUrl).into(holder.produceImage);
-        holder.produceName.setText(produceCart.getName());
-        holder.producePrice.setText("¥" + String.valueOf(produceCart.getPrice()));
+        holder.produceName.setText(produce.getName());
+        holder.producePrice.setText("¥" + String.valueOf(produce.getPrice()));
 
 
         /**

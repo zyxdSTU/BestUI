@@ -1,6 +1,7 @@
 package android.coolweather.com.bestui;
 
 import android.content.Intent;
+import android.coolweather.com.bestui.util.HttpUtil;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -17,8 +18,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
+
+import java.io.IOException;
+
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
+
+import static android.coolweather.com.bestui.util.HttpUtil.urlRegister;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -225,7 +234,30 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 //注册成功
                 if(caseId == 0) {
                     verifyStatus = false;
-                    password = passwordText.getText().toString();
+                    password = passwordText.getText().toString().trim();
+                    phoneNumber = phoneNumberText.getText().toString().trim();
+                    String url = urlRegister + "?name=" + phoneNumber + "&password=" + password;
+                    HttpUtil.registerOKHttp(url, new Callback() {
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(RegisterActivity.this, "系统未响应", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(RegisterActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    });
                     backLoginActivity();
                 }
                 switch(caseId) {

@@ -8,6 +8,7 @@ import android.coolweather.com.bestui.util.HttpUtil;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
@@ -35,9 +36,9 @@ import static android.coolweather.com.bestui.util.HttpUtil.urlProduce;
 public class HomeFragment extends Fragment{
     private ArrayList<Produce> produceList = new ArrayList<Produce>();
     private ProduceAdapter adapter;
-    private ProgressDialog progressDialog;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private final static int UPDATE = 1;
-
+    private final static int REFRESH = 2;
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -46,6 +47,8 @@ public class HomeFragment extends Fragment{
                case UPDATE:
                    update();
                    break;
+               case REFRESH:
+                   refresh();
                default:
                    break;
            }
@@ -56,11 +59,20 @@ public class HomeFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         initList();
         View view = inflater.inflate(R.layout.layout_home, container, false);
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh);
         RecyclerView recycleView = (RecyclerView) view.findViewById(R.id.recycle_view);
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         recycleView.setLayoutManager(layoutManager);
         adapter = new ProduceAdapter(produceList);
         recycleView.setAdapter(adapter);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
+            @Override
+            public void onRefresh() {
+                Log.d("MainActivity", "onRefresh: ");
+                queryProduce(urlProduce);
+            }
+        });
         return view;
     }
     /**
@@ -81,17 +93,34 @@ public class HomeFragment extends Fragment{
         HttpUtil.sendOkHttpRequest(url, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getContext(), "加载失败", Toast.LENGTH_SHORT).show();
+                        if(swipeRefreshLayout.isRefreshing()) {
+                            swipeRefreshLayout.setRefreshing(false);
+                        }
+                    }
+                });
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
+                DataSupport.deleteAll(Produce.class);
                 String responseText = response.body().string();
+                Log.d("MainActivity", responseText);
                 HttpUtil.handleProduceResponse(responseText);
 
                 /**发送更新消息**/
-                Message msg = new Message(); msg.what = UPDATE;
-                handler.sendMessage(msg);
+                if(produceList.size() == 0) {
+                    Message msg = new Message();
+                    msg.what = UPDATE;
+                    handler.sendMessage(msg);
+                } else {
+                    Message msg = new Message();
+                    msg.what = REFRESH;
+                    handler.sendMessage(msg);
+                }
             }
         });
     }
@@ -99,5 +128,17 @@ public class HomeFragment extends Fragment{
     private void update() {
         initList();
         adapter.notifyDataSetChanged();
+        if(swipeRefreshLayout.isRefreshing()) {
+            swipeRefreshLayout.setRefreshing(false);
+        }
+    }
+
+    public void refresh() {
+        produceList.clear();
+        produceList.addAll(DataSupport.findAll(Produce.class));
+        adapter.notifyDataSetChanged();
+        if(swipeRefreshLayout.isRefreshing()) {
+            swipeRefreshLayout.setRefreshing(false);
+        }
     }
 }

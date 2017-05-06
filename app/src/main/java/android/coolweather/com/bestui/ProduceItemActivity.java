@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.coolweather.com.bestui.JavaBean.Produce;
 import android.coolweather.com.bestui.JavaBean.ProduceCart;
 import android.coolweather.com.bestui.JavaBean.ProduceCollect;
+import android.coolweather.com.bestui.JavaBean.Produces;
+import android.coolweather.com.bestui.util.DataBase;
 import android.coolweather.com.bestui.util.HttpUtil;
 import android.coolweather.com.bestui.util.Quantity;
 import android.graphics.Color;
@@ -99,12 +101,12 @@ public class ProduceItemActivity extends AppCompatActivity implements View.OnCli
                 break;
             case R.id.collect_button:
                 addCollect();
-                Toast.makeText(this, "已添加收藏", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.cart_button:
                 addCart();
-                Toast.makeText(this, "已添加购物车", Toast.LENGTH_SHORT).show();
                 break;
+            case R.id.buy_button:
+                gotoOrderActivity();
             default:
                 break;
         }
@@ -116,10 +118,30 @@ public class ProduceItemActivity extends AppCompatActivity implements View.OnCli
     }
 
     public void addCollect() {
-        new ProduceCollect(produce).save();
+        boolean flag = DataBase.isExitInCollect(produce.getName());
+        if(!flag) {
+            new ProduceCollect(produce.getName()).save();
+            Toast.makeText(this, "已添加收藏", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "已收藏该商品", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void addCart() {
-        new ProduceCart(produce).save();
+        boolean flag = DataBase.isExitInCart(produce.getName());
+        if(!flag) {
+            new ProduceCart(produce.getName()).save();
+            Toast.makeText(this, "已添加购物车", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "购物车已存在该商品", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void gotoOrderActivity() {
+        double quantity = Double.parseDouble(quantityText.getText().toString());
+        Intent intent = new Intent(ProduceItemActivity.this, OrderActivity.class);
+        intent.putExtra("produces",new Gson().toJson(new Produces(produce.getName(), quantity)));
+        intent.putExtra("totalMoney", "¥" + String.valueOf(produce.getPrice() * quantity));
+        startActivity(intent);
     }
 }
