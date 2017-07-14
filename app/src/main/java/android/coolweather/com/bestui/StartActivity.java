@@ -1,6 +1,7 @@
 package android.coolweather.com.bestui;
 
 import android.content.Intent;
+import android.coolweather.com.bestui.util.PreferenceManager;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,13 +17,18 @@ public class StartActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                toLoginActivity();
+                toActivity();
             }
         }, DELAY_TIME);
     }
 
-    public void toLoginActivity() {
-        Intent intent = new Intent(StartActivity.this, LoginActivity.class);
-        startActivity(intent);
+    public void toActivity() {
+        finish();
+        if(PreferenceManager.getInstance().preferenceManagerGet("currentUser").equals("")) {
+            startActivity(new Intent(StartActivity.this, LoginActivity.class));
+        } else {
+            Intent intent = new Intent(StartActivity.this, HomeActivity.class);
+            startActivity(intent);
+        }
     }
 }

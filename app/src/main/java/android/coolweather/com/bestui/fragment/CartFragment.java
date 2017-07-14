@@ -137,7 +137,7 @@ public class CartFragment extends Fragment implements View.OnClickListener{
             }
         }
 
-        /**更新数据库**/
+        /**更新数据库** bug*/
         DataSupport.deleteAll(ProduceCart.class);
         for(ProduceCart produceCart : tempProduceList) {
             new ProduceCart(produceCart.getName()).save();

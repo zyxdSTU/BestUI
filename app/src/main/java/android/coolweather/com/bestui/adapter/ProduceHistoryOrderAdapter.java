@@ -1,18 +1,22 @@
 package android.coolweather.com.bestui.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.coolweather.com.bestui.JavaBean.Order;
 import android.coolweather.com.bestui.JavaBean.OrderAddress;
 import android.coolweather.com.bestui.JavaBean.OrderProduces;
 import android.coolweather.com.bestui.JavaBean.Produce;
+import android.coolweather.com.bestui.JavaBean.ProduceCart;
 import android.coolweather.com.bestui.JavaBean.Produces;
 import android.coolweather.com.bestui.ProduceItemActivity;
 import android.coolweather.com.bestui.R;
 import android.coolweather.com.bestui.util.DataBase;
 import android.coolweather.com.bestui.util.HttpUtil;
+import android.coolweather.com.bestui.util.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,8 +31,14 @@ import com.google.gson.Gson;
 
 import org.litepal.crud.DataSupport;
 
+import java.io.IOException;
 import java.util.List;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
+
+import static android.coolweather.com.bestui.util.HttpUtil.urlDownload;
 import static android.coolweather.com.bestui.util.HttpUtil.urlImage;
 
 /**
@@ -113,8 +123,19 @@ public class ProduceHistoryOrderAdapter extends RecyclerView.Adapter<ProduceHist
                 produce.setPrice(0.0);
                 produce.setDescription("商品已下架");
             }
-            String tempUrl = urlImage + produce.getImage();
-            Glide.with(mContext).load(tempUrl).into(produceImage);
+
+
+            /**如果缓存有直接从缓存中加载**/
+            if (!PreferenceManager.getInstance().preferenceManagerGet(String.valueOf(produce.getImage())).equals("")) {
+                String imageString = PreferenceManager.getInstance().preferenceManagerGet(String.valueOf(produce.getImage()));
+                byte[] imageByte = Base64.decode(imageString.getBytes(), Base64.DEFAULT);
+                Glide.with(mContext).load(imageByte).into(produceImage);
+            } else {
+                String tempUrl = urlImage + produce.getImage();
+                Glide.with(mContext).load(tempUrl).into(produceImage);
+            }
+
+            
             produceName.setText(produce.getName());
             producePrice.setText("¥" + String.valueOf(produce.getPrice()));
             produceQuantity.setText("× " + String.valueOf(produces.getQuantity()));

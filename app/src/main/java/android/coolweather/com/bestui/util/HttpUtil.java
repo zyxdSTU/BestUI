@@ -23,12 +23,13 @@ import okhttp3.Response;
 
 public class HttpUtil {
 
-    public static final String urlImage = "http://118.89.165.181:8080/CaiDaoJia/images/";
-    public static final String urlProduce = "http://118.89.165.181:8080/CaiDaoJia/produceJSON";
-    public static final String urlOrderAddress = "http://118.89.165.181:8080/CaiDaoJia/orderAddress";
-    public static final String urlOrderProduces = "http://118.89.165.181:8080/CaiDaoJia/orderProduces";
-    public static final String urlVerify = "http://118.89.165.181:8080/CaiDaoJia/verify";
-    public static final String urlRegister = "http://118.89.165.181:8080/CaiDaoJia/register";
+    public static final String urlImage = "http://119.29.61.99:8080/CaiDaoJia/images/";
+    public static final String urlProduce = "http://119.29.61.99:8080/CaiDaoJia/produceJSON";
+    public static final String urlOrderAddress = "http://119.29.61.99:8080/CaiDaoJia/orderAddress";
+    public static final String urlOrderProduces = "http://119.29.61.99:8080/CaiDaoJia/orderProduces";
+    public static final String urlVerify = "http://119.29.61.99:8080/CaiDaoJia/verify";
+    public static final String urlRegister = "http://119.29.61.99:8080/CaiDaoJia/register";
+    public static final String urlDownload = "http://119.29.61.99:8080/CaiDaoJia/download?imageId=";
     /**发送请求**/
     public static void sendOkHttpRequest(String address, okhttp3.Callback callback) {
         OkHttpClient client = new OkHttpClient();

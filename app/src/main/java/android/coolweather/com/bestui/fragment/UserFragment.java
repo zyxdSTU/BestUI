@@ -1,5 +1,6 @@
 package android.coolweather.com.bestui.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.coolweather.com.bestui.AddressActivity;
 import android.coolweather.com.bestui.CollectActivity;
@@ -7,6 +8,7 @@ import android.coolweather.com.bestui.HistoryOrderActivity;
 import android.coolweather.com.bestui.JavaBean.Address;
 import android.coolweather.com.bestui.LoginActivity;
 import android.coolweather.com.bestui.R;
+import android.coolweather.com.bestui.util.PreferenceManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -96,6 +98,8 @@ public class UserFragment extends Fragment implements View.OnClickListener{
     }
 
     public void exit() {
+        PreferenceManager.getInstance().preferenceManagerRemove("currentUser");
+        getActivity().finish();
         Intent intent = new Intent(getContext(), LoginActivity.class);
         startActivity(intent);
     }

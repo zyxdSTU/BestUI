@@ -3,6 +3,7 @@ package android.coolweather.com.bestui;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.coolweather.com.bestui.util.HttpUtil;
+import android.coolweather.com.bestui.util.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.util.DiffUtil;
@@ -91,6 +92,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (result.equals("true"))
                         {
                             finish();
+                            PreferenceManager.getInstance().preferenceManagerSave("currentUser", phoneNum);
                             startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                         }else {
                             Toast.makeText(LoginActivity.this, "账号或密码错误", Toast.LENGTH_SHORT).show();

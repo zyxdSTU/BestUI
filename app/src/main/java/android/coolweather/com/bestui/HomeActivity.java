@@ -1,9 +1,11 @@
 package android.coolweather.com.bestui;
 
+import android.content.Intent;
 import android.coolweather.com.bestui.adapter.FragmentAdapter;
 import android.coolweather.com.bestui.fragment.CartFragment;
 import android.coolweather.com.bestui.fragment.HomeFragment;
 import android.coolweather.com.bestui.fragment.UserFragment;
+import android.coolweather.com.bestui.util.PreferenceManager;
 import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;

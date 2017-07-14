@@ -1,17 +1,22 @@
 package android.coolweather.com.bestui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.coolweather.com.bestui.JavaBean.Produce;
 import android.coolweather.com.bestui.JavaBean.ProduceCart;
 import android.coolweather.com.bestui.JavaBean.ProduceCollect;
 import android.coolweather.com.bestui.JavaBean.Produces;
+import android.coolweather.com.bestui.adapter.ProduceCartAdapter;
 import android.coolweather.com.bestui.util.DataBase;
 import android.coolweather.com.bestui.util.HttpUtil;
+import android.coolweather.com.bestui.util.PreferenceManager;
 import android.coolweather.com.bestui.util.Quantity;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -20,6 +25,14 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
+
+import static android.coolweather.com.bestui.util.HttpUtil.urlDownload;
 
 public class ProduceItemActivity extends AppCompatActivity implements View.OnClickListener{
     private Produce produce;
@@ -79,7 +92,8 @@ public class ProduceItemActivity extends AppCompatActivity implements View.OnCli
     }
 
     public void initData() {
-        Glide.with(this).load(HttpUtil.urlImage + produce.getImage()).into(produceImage);
+        //Glide.with(this).load(HttpUtil.urlImage + produce.getImage()).into(produceImage);
+        loadImage();
         produceName.setText(produce.getName());
         producePrice.setText("¥" + String.valueOf(produce.getPrice()));
         produceText.setText(produce.getDescription());
@@ -143,5 +157,38 @@ public class ProduceItemActivity extends AppCompatActivity implements View.OnCli
         intent.putExtra("produces",new Gson().toJson(new Produces(produce.getName(), quantity)));
         intent.putExtra("totalMoney", "¥" + String.valueOf(produce.getPrice() * quantity));
         startActivity(intent);
+    }
+
+    public void loadImage() {
+        /**如果缓存有直接从缓存中加载**/
+        if (!PreferenceManager.getInstance().preferenceManagerGet(String.valueOf(produce.getImage())).equals("")) {
+            String imageString = PreferenceManager.getInstance().preferenceManagerGet(String.valueOf(produce.getImage()));
+            byte[] imageByte = Base64.decode(imageString.getBytes(), Base64.DEFAULT);
+            Glide.with(this).load(imageByte).into(produceImage);
+        } else {
+            /**从网络加载进缓存**/
+            HttpUtil.sendOkHttpRequest(urlDownload + String.valueOf(produce.getImage()), new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    Log.d("MainActivity", "从网络加载图片失败");
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    final byte[] imageByte = response.body().bytes();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (imageByte.length > 0) {
+                                    Glide.with(ProduceItemActivity.this).load(imageByte).into(produceImage);
+                                    /**添加进缓存**/
+                                    String imageString = new String(Base64.encodeToString(imageByte, Base64.DEFAULT));
+                                    PreferenceManager.getInstance().preferenceManagerSave(String.valueOf(produce.getImage()), imageString);
+                                }
+                            }
+                        });
+                    }
+            });
+        }
     }
 }
